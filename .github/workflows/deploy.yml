@@ -7,7 +7,7 @@ on:
     # 대상 브런치
     brunches:
       # 대상 브런치는 main/master
-      - master
+      - main
 
 # 해야될 일 => jobs
 jobs:
