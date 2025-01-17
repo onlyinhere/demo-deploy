@@ -1,0 +1,46 @@
+name: Deploy for ci/cd
+
+# 트리거(이벤트 발생시킬때 씀)
+on:
+  # 원인 : 푸시
+  push:
+    # 대상 브런치
+    brunches:
+      # 대상 브런치는 main/master
+      - master
+
+# 해야될 일 => jobs
+jobs:
+  # 잡 전체에 대한 이름 (커스텀)
+  cicd-deploy:
+    # ubuntu linux 준비 -> 해당 작업이 진행되는 베이스 OS 지원
+    runs-on: ubuntu-latest
+    # 개별 작업 단계 지정
+    steps:
+      # https://github.com/actions/checkout 사용
+      # 해당 작업이 수행되면 본 레포지토리(저장소) 체크아웃되어 os단에 저장
+      # 향후 워크플로우에서 엑세스 처리 가능하게 구성된다
+      - # name: 작업명 기술, uses: 실제할일 기술
+      - name: Github Repository 내 파일들 checkout(불러오기) 수행
+        uses: actions/checkout@v4
+
+      # JDK 17 버전 설치
+      # https://github.com/actions/setup-java
+      - name: JDK 17 버전 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+
+       # application.yml 동적 생성
+       # 소스 코드내에 위치 (덮어쓰기?, 신규작성?)
+       # RDS 세팅된 이후 진행
+       # 현재는 skip
+
+       # build 준비
+       # chmod +x ./gradlew : 퍼미션 오류 발생시 처리
+       # ./gradlew clean build
+        - name: 단위 테스트 및 빌드
+          # 명령어가 여러개면 | 추가
+          run: 
+            ./gradlew clean build
