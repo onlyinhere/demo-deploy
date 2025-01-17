@@ -6,8 +6,8 @@ on:
   push:
     # 대상 브런치
     brunches:
-      # 대상 브런치는 main/master
-      - main
+      # 2. 대상 브런치는 db(본인 브런치명)
+      - madb
 
 # 해야될 일 => jobs
 jobs:
@@ -36,6 +36,11 @@ jobs:
       # 소스 코드내에 위치 (덮어쓰기?, 신규작성?)
       # RDS 세팅된 이후 진행
       # 현재는 skip
+      - name: application.properties 동적 생성
+        run: |
+         echo "${{ secrets.APPLICATION_PRO }}" > ./src/main/resources/application.properties
+         ls ./src/main/resources/
+         
 
       # build 준비
       # chmod +x ./gradlew : 퍼미션 오류 발생시 처리
@@ -62,8 +67,8 @@ jobs:
           ls
 
 
-      #
-      #
+      # EC2 로 업로드
+      # https://github.com/appleboy/scp-action
       #
       #
       #
@@ -81,3 +86,25 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           source: run.jar
           target: /home/ubuntu/server/demo
+
+      # EC2 접속, 서버가동!!
+      # https://github.com/appleboy/scp-action
+      - name: SSH로 ec2에 접속후 서버가동
+        uses: appleboy/ssh-action@v1.2.0
+        # script_stop : true -> 오류나면 중단
+        # 처리할 작업
+        # 처리할 반복적 작업
+        #  기존 jar 파일 삭제 처리 (업로드 위치, 구동 위치 구분)
+        # 구동 위치 : /home/ubuntu/server/web <- 설정(가정)
+        # rm -rf 대상 => 대상의 폴더 및 하위 파일까지 모두다 삭제
+        # 2. 새롭게 폴더 생성 /home/ubuntu/server/web
+        # mkdir /home/ubuntu/server/web
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.KEY }}
+          script_stop: true
+          script: |
+            rm -rf /home/ubuntu/server/web
+            mkdir /home/ubuntu/server/web
+            mv /home/ubuntu/server/demo/run.jar /home/ubuntu/server/web/run.jar

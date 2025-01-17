@@ -4,6 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+### 1. 깃허브에 반영 x
+src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
