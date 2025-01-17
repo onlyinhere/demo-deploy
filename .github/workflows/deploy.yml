@@ -42,6 +42,14 @@ jobs:
       # ./gradlew clean build
       - name: 단위 테스트 및 빌드
         # 명령어가 여러개면 | 추가
+        # 1. 빌드용 쉘스크립트(gradlew)를 퍼미션 조정
+        # 2. 빌드
+        # 3. 현재 위치 확인
+        # 4. 현재 위치 목록
+        # 5. 빌드된 산출물의 목록 확인
         run: |
           chmod +x ./gradlew
           ./gradlew clean build
+          pwd
+          ls
+          ls ./build/libs
