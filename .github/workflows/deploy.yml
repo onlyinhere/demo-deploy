@@ -57,8 +57,9 @@ jobs:
       # 이름이 너무 길므로 적당하게 수정 -> 리눅스 명령어
       # # 파일 위치를 변경하면서 이름도 변경 -> mv
       - name: 관리상 빌드된 결과물의 이름을 변경 처리
-        run: mv ./build/libs/*SNAPSHOT.jar ./run.jar
-        ls
+        run: |
+          mv ./build/libs/*SNAPSHOT.jar ./run.jar
+          ls
 
 
       #
