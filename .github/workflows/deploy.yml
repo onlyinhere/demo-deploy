@@ -59,3 +59,24 @@ jobs:
       - name: 관리상 빌드된 결과물의 이름을 변경 처리
         run: mv ./build/libs/*SNAPSHOT.jar ./run.jar
         ls
+
+
+      #
+      #
+      #
+      #
+      #
+      #
+      - name: EC2에 jar 파일 업로드
+        uses: appleboy/scp-action@v0.1.7
+        # 위의 액션을 위한 파라미터
+        # SSH의 포트를 보안상 이유로 22 -> 다른 번호로 변경 했다면
+        # port 설징 필요
+        # 파일이 여러개면 "파일, 파일,,,"
+        # 원격 서버에 폴더도 자동 생성되는지 검토
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          source: run.jar
+          target: /home/ubuntu/server/demo
